@@ -7,6 +7,7 @@ defmodule CrowdCrush.User do
     field :password, :string, virtual: true
     field :password_hash, :string
     has_many :videos, CrowdCrush.Video
+    has_many :annotations, CrowdCrush.Annotation
 
     timestamps()
   end

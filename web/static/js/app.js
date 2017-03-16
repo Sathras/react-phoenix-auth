@@ -19,3 +19,10 @@ import "phoenix_html"
 // paths "./socket" or full ones "web/static/js/socket".
 
 // import socket from "./socket"
+
+import socket from "./socket"
+import Video from "./video"
+
+let video = document.getElementById("video") ;
+
+Video.init(socket, document.getElementById("video"))

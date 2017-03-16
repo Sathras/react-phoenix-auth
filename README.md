@@ -23,3 +23,10 @@ Ready to run in production? Please [check our deployment guides](http://www.phoe
 ## My Commands
   * `mix ecto.gen.migration create_user` Create Database Migration File
   * `mix ecto.migrate` Incorporates Changes (add before at priv/repo/migrations/file)
+
+## Brunch
+  * `npm install -g brunch` Install it
+  * `brunch build` Build static assets, complile them and copy to priv/static
+  * `brunch build --production` Builds and minifies them for production
+  * `brunch watch` not needed (phoenix does that automatically)
+  *

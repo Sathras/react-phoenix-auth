@@ -2,6 +2,7 @@ defmodule CrowdCrush.User do
   use CrowdCrush.Web, :model
 
   schema "users" do
+    field :email, :string
     field :name, :string
     field :username, :string
     field :password, :string, virtual: true
@@ -14,17 +15,33 @@ defmodule CrowdCrush.User do
 
   def changeset(model, params \\ :empty) do
     model
-    |> cast(params, ~w(name username))
-    |> validate_required([:name, :username])
-    |> validate_length(:username, min: 1, max: 20)
-    |> unique_constraint(:username) # save unique_constraint for last as DB call
+    |> cast(params, ~w(email password))
+    |> validate_required([:email, :password])
+    |> validate_format(:email, ~r/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)
   end
 
   def registration_changeset(model, params) do
+
+    # username
+    # no _ or . at the beginning
+    # no __ or _. or ._ or .. inside
+    # allowed characters: a-zA-Z0-9._
+    # no _ or . at the end
+
+    # password
+    # at least 1 number and alphapetic
+    # allowed characters: a-zA-Z0-9$@$!%*?&
+
     model
     |> changeset(params)
-    |> cast(params, ~w(password))
-    |> validate_length(:password, min: 6, max: 100)
+    |> cast(params, ~w(name username))
+    |> validate_required([:username])
+    |> validate_length(:username, min: 3, max: 20)
+    |> validate_length(:password, min: 8, max: 100)
+    |> validate_format(:username, ~r/^(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$/)
+    # |> validate_format(:password, ~r/^(?=.*[A-Za-z])[a-zA-Z0-9$@$!%*?&]$/)
+    |> unique_constraint(:username) # save unique_constraint for last as DB call
+    |> unique_constraint(:email) # save unique_constraint for last as DB call
     |> put_pass_hash()
   end
 

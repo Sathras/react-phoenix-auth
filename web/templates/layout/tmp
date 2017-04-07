@@ -1,0 +1,50 @@
+<% page = assigns[:page] || "index" %>
+    <% error = assigns[:error] || false %>
+    <%=
+      # show the correct top bar
+      case page do
+        :editor -> render "navtop_editor.html", assigns
+        :viewer -> render "navtop_viewer.html", assigns
+              _ -> render "navtop_default.html", assigns
+      end
+    %>
+
+    <%= if get_flash(@conn, :info) do %>
+      <p class="alert alert-info container" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <span class='glyphicon glyphicon glyphicon-info-sign' aria-hidden='true'></span>
+        <%= get_flash(@conn, :info) %>
+      </p>
+    <% end %>
+
+    <%= if get_flash(@conn, :error) do %>
+      <p class="alert alert-danger container" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <span class='glyphicon glyphicon glyphicon-remove-sign' aria-hidden='true'></span>
+        <%= get_flash(@conn, :error) %>
+      </p>
+    <% end %>
+
+    <%= render @view_module, @view_template, assigns %>
+
+
+    <%=
+      # show the correct bottom bar
+      case page do
+        :editor -> render "navbot_editor.html", assigns
+        :index  -> render "navbot_index.html", assigns
+        :viewer -> render "navbot_viewer.html", assigns
+              _ -> render "navbot_default.html", assigns
+      end
+    %>
+
+
+        <script type="text/javascript">
+      window.error = <%= if !error  do %> false <%= else %> "<%= assigns[:error] %>" <%= end %>;
+      window.page = "<%= page %>"
+      window.userToken = "<%= assigns[:user_token] %>"
+    </script>

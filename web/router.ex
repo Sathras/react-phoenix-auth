@@ -17,6 +17,8 @@ defmodule CrowdCrush.Router do
   scope "/", CrowdCrush do
     pipe_through :browser # Use the default browser stack
 
+    get "/*path", PageController, :index
+
     get "/hello", HelloController, :world
     get "/", PageController, :index
     resources "/users", UserController, only: [:index, :show, :new, :create]

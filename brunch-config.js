@@ -22,7 +22,7 @@ exports.config = {
     stylesheets: {
       joinTo: "css/app.css",
       order: {
-        after: ["web/static/css/app.css"] // concat app.css last
+        after: ["web/static/css/app.scss"] // concat app.css last
       }
     },
     templates: {
@@ -52,8 +52,21 @@ exports.config = {
   // Configure your plugins
   plugins: {
     babel: {
+      presets: ["es2015", "react"],
       // Do not use ES6 compiler in vendor code
       ignore: [/web\/static\/vendor/]
+    },
+    copycat: {
+      // copy node_modules/bootstrap-sass/assets/fonts/bootstrap/* to priv/static/fonts/
+      "fonts": ["node_modules/bootstrap-sass/assets/fonts/bootstrap"]
+    },
+    sass: {
+      mode : 'native',
+      options: {
+        // tell sass-brunch where to look for files to @import
+        includePaths: ["node_modules/bootstrap-sass/assets/stylesheets"],
+        precision: 8 // minimum precision required by bootstrap-sass
+      }
     }
   },
 
@@ -64,6 +77,17 @@ exports.config = {
   },
 
   npm: {
-    enabled: true
+    enabled: true,
+
+    globals : {
+      // bootstrap-sass' JavaScript requires both '$' and 'jQuery' in global scope
+      $: 'jquery',
+      jQuery: 'jquery',
+      bootstrap: 'bootstrap-sass' // require bootstrap-sass' JavaScript globally
+    },
+
+    // Whitelist the npm deps to be pulled in as front-end assets.
+    // All other deps in package.json will be excluded from the bundle.
+    whitelist: ["phoenix", "phoenix_html", "react", "react-dom"]
   }
 };

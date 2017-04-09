@@ -66,14 +66,15 @@ class App extends React.Component {
       .receive("ok", location.reload())
   }
 
-  switchPage (page){
-    if(page === this.state.path) return;
+  switchPage (page, overlay=false){
+    if((!overlay && page === this.state.path) || (overlay && page === this.state.overlay)) return;
     // add new page to browser history api
     window.history.pushState(page, null, page);
     this.setState({path : page});
   }
 
   render (){
+
     return (
       <div id='app'>
         <NavTop

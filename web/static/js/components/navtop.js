@@ -20,10 +20,14 @@ class NavTop extends React.Component {
       password  : {value: '', valid: false},
       password2 : {value: '', valid: false},
       username  : {value: '', valid: false},
-      name      : {value: '', valid: false},
+      name      : {value: '', valid: true},
       // there has already been an attempt to submit it or form got back invalid from server
       submitted : false
     };
+  }
+
+  componentDidUpdate(){
+    if(!this.state.submitted && this.state.modal) document.getElementById("auth-email").focus();
   }
 
   changeMode(e, mode){
@@ -32,23 +36,26 @@ class NavTop extends React.Component {
   }
 
   changeEmail (e) {
-
-    const valid = Validator.isEmail(e.target.value);
-
+    const match = e.target.value.match(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
     this.setState({
       email : {
         value : e.target.value,
-        valid : valid
+        valid : (match) ? true : false
       }
     });
   }
 
   changePassword (e){
     // regex validation (8-100 characters, a-Z, one number and one letter)
+    const match = e.target.value.match(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,100}$/)
     this.setState({
       password : {
         value : e.target.value,
-        valid : e.target.value.match(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,100}$/)
+        valid : (match) ? true : false
+      },
+      password2 : {
+        value : this.state.password2.value,
+        valid : false
       }
     });
   }
@@ -63,33 +70,28 @@ class NavTop extends React.Component {
   }
 
   changeUsername (e){
-
-    const valid = Validator.isLength(e.target.value, { min:5, max:15 })
-              &&  Validator.isAlphanumeric(e.target.value);
-
+    const match = e.target.value.match(/^(?=^.{3,20}$)^[a-zA-Z][a-zA-Z0-9]*[._-]?[a-zA-Z0-9]+$/)
     this.setState({
       username : {
         value : e.target.value,
-        valid : valid
+        valid : (match) ? true : false
       }
     });
   }
 
   changeName (e){
-
-    const valid = Validator.isLength(e.target.value, { min:5, max:15 })
-              &&  Validator.isAlphanumeric(e.target.value);
-
     this.setState({
       name : {
         value : e.target.value,
-        valid : valid
+        valid : (e.target.value.length <= 50) ? true : false
       }
     });
   }
 
 
-  validateForm (){
+  validateForm (e){
+
+    e.preventDefault();
 
     if(this.state.modal === 'login'){
       if(this.state.email.valid && this.state.password.valid)
@@ -135,31 +137,90 @@ class NavTop extends React.Component {
       : null
 
     var formHeadingTxt, formModeQuestion, formModeButton, formButtonTxt;
+    var modalClass = 'modal-dialog'
 
     if (this.state.modal === 'register') {
-      formHeadingTxt    = 'Register';
-      formModeQuestion  = 'Already have an account?';
-      formModeButton    = 'Sign in';
-      formButtonTxt     = 'Sign up';
+      formHeadingTxt    = 'Register'
+      formModeQuestion  = 'Already have an account?'
+      formModeButton    = 'Sign in'
+      formButtonTxt     = 'Sign up'
+      modalClass       += ' modal-lg'
     } else {
-      formHeadingTxt    = 'Sign in';
-      formModeQuestion  = 'No account yet?';
-      formModeButton    = 'Register here';
-      formButtonTxt     = 'Sign in';
+      formHeadingTxt    = 'Sign in'
+      formModeQuestion  = 'No account yet?'
+      formModeButton    = 'Register here'
+      formButtonTxt     = 'Sign in'
+      modalClass       += ' modal-sm'
+    }
+
+    // validation classes for form fields
+
+    var errorUsername = '';
+    var classUsernameDiv = (this.state.modal === 'register') ? 'form-group' : 'hidden';
+    if(this.state.submitted){
+      if(this.state.username.valid) classUsernameDiv += ' has-success'
+      else {
+        classUsernameDiv += ' has-error';
+        errorUsername =
+          `Only one special char (._-) allowed and it must not be at the extremas of the string.
+          The first character cannot be a number.
+          All the other characters allowed are letters and numbers.
+          The total length must be between 3 and 20 characters.`;
+      }
+    }
+
+    var errorName = '';
+    var classNameDiv = (this.state.modal === 'register') ? 'form-group' : 'hidden';
+    if(this.state.submitted){
+      if(this.state.name.valid) classNameDiv += ' has-success'
+      else {
+        classNameDiv += ' has-error';
+        errorName = `Your name can have a maximum length of 50 characters.`;
+      }
+    }
+
+    var errorEmail = '';
+    var classEmailDiv = 'form-group';
+    if(this.state.submitted){
+      if(this.state.email.valid) classEmailDiv += ' has-success'
+      else {
+        classEmailDiv += ' has-error';
+        errorEmail = 'Please enter a valid email address.'
+      }
+    }
+
+    var errorPassword = '';
+    var classPasswordDiv = 'form-group';
+    if(this.state.submitted){
+      if(this.state.password.valid) classPasswordDiv += ' has-success'
+      else {
+        classPasswordDiv += ' has-error';
+        errorPassword = 'Must contain between 8 and 100 characters and at least a letter and a number.'
+      }
+    }
+
+    var errorPassword2 = '';
+    var classPassword2Div = (this.state.modal === 'register') ? 'form-group' : 'hidden';
+    if(this.state.submitted){
+      if(this.state.password2.valid) classPassword2Div += ' has-success'
+      else {
+        classPassword2Div += ' has-error';
+        errorPassword2 = 'Your passwords do not match.'
+      }
     }
 
     return (
       <nav className="navbar navbar-default">
         <div className="container">
           <ul className="nav navbar-nav navbar-right">
-            {authLink}
             {regLink}
+            {authLink}
           </ul>
         </div>
         <div id='modal-auth' className="modal fade in" role="dialog" style={{
           display: (this.state.modal) ? 'block' : 'none'
         }}>
-          <div className="modal-dialog modal-sm" role="document">
+          <div className={modalClass} role="document">
             <div className="modal-content">
               <div className="modal-header">
                 <button type="button" className="close" data-dismiss="modal" aria-label="Close">
@@ -167,29 +228,79 @@ class NavTop extends React.Component {
                 </button>
                 <h3 className="modal-title">{formHeadingTxt}</h3>
               </div>
-              <form onSubmit={this.submitForm}>
+              <form onSubmit={(e) => this.validateForm(e)}>
                 <div className="modal-body">
                     <p id='authFeedback' className="text-danger"></p>
-                    <p>
-                      <input
-                        type="text"
-                        className="form-control"
-                        placeholder="Email"
-                        value={this.state.email.value}
-                        onChange={this.changeEmail}
-                      />
-                    </p>
-                    <p>
-                      <input
-                        type="password"
-                        className="form-control"
-                        placeholder="Password"
-                        value={this.state.password.value}
-                        onChange={this.changePassword}
-                        required=""
-                        autoComplete="off"
-                      />
-                    </p>
+                  <div className='row'>
+                    <div className='col-sm-6'>
+                      <div className={classUsernameDiv}>
+                        <label className="control-label" htmlFor="auth-username">Username*</label>
+                        <input
+                          id="auth-username"
+                          type="text"
+                          className="form-control"
+                          placeholder="Username"
+                          value={this.state.username.value}
+                          onChange={this.changeUsername}
+                        />
+                        <span className="help-block">{errorUsername}</span>
+                      </div>
+
+                      <div className={classEmailDiv}>
+                        <label className="control-label" htmlFor="auth-email">Email*</label>
+                        <input
+                          id="auth-email"
+                          type="text"
+                          className="form-control"
+                          placeholder="Email"
+                          value={this.state.email.value}
+                          onChange={this.changeEmail}
+                        />
+                        <span className="help-block">{errorEmail}</span>
+                      </div>
+
+                      <div className={classNameDiv}>
+                        <label className="control-label" htmlFor="auth-name">Name</label>
+                        <input
+                          id="auth-name"
+                          type="text"
+                          className="form-control"
+                          placeholder="Name"
+                          value={this.state.name.value}
+                          onChange={this.changeName}
+                        />
+                        <span className="help-block">{errorName}</span>
+                      </div>
+                    </div>
+                    <div className='col-sm-6'>
+                      <div className={classPasswordDiv}>
+                        <label className="control-label" htmlFor="auth-password">Password*</label>
+                        <input
+                          id="auth-password"
+                          type="password"
+                          className="form-control"
+                          placeholder="Password"
+                          value={this.state.password.value}
+                          onChange={this.changePassword}
+                          autoComplete="off"
+                        />
+                        <span className="help-block">{errorPassword}</span>
+                      </div>
+                      <div className={classPassword2Div}>
+                        <label className="control-label" htmlFor="auth-password2">Confirm Password*</label>
+                        <input
+                          id="auth-password2"
+                          type="password"
+                          className="form-control"
+                          placeholder="Confirm Password"
+                          value={this.state.password2.value}
+                          onChange={this.changePassword2}
+                          autoComplete="off"
+                        />
+                        <span className="help-block">{errorPassword2}</span>
+                      </div>
+                    </div>
+                  </div>
                     <p>{formModeQuestion} <a onClick={(e) => this.changeMode(e,
                       (this.state.modal === 'register') ? 'login' : 'register')}>
                       {formModeButton}</a>

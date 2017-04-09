@@ -21,19 +21,75 @@ import ReactDOM from "react-dom"
 // paths "./socket" or full ones "web/static/js/socket".
 
 import socket from "./socket"
+import NavTop from "./components/navtop"
 
-// import socket from "./socket"
 // import Video from "./video"
 
 // let video = document.getElementById("video") ;
 
 // Video.init(socket, document.getElementById("video"))
 
-let App= {
-  init(socket){
-    socket.connect();
-    console.log('connected')
+class App extends React.Component {
+
+  constructor(props) {
+    super(props);
+
+    // enable function bindings
+    this.switchPage = this.switchPage.bind(this);
+    this.logout = this.logout.bind(this);
+
+    // define channels
+    this.channelMain = socket.channel("main");
+
+    this.state = {
+      path : window.path,
+      user : null
+    };
+  }
+
+  componentDidMount(){
+    socket.connect()
+
+    // enable to move forward and backward in browser history
+    window.addEventListener('popstate', function(e){
+      this.setState({path : e.state || '/'});
+    }.bind(this));
+
+    // join base channels
+    this.channelMain.join()
+      .receive("ok", (data) => this.setState(data))
+      .receive("error", reason => console.log("Connection to the channel could not be established: ", reason) )
+  }
+
+  logout(){
+    this.channelMain.push("logout")
+      .receive("ok", location.reload())
+  }
+
+  switchPage (page){
+    if(page === this.state.path) return;
+    // add new page to browser history api
+    window.history.pushState(page, null, page);
+    this.setState({path : page});
+  }
+
+  render (){
+    return (
+      <div id='app'>
+        <NavTop
+          user       = {this.state.user}
+          switchPage = {this.switchPage}
+          logout     = {this.logout}
+        />
+        {this.state.path}
+      </div>
+    )
   }
 }
 
-App.init(socket);
+
+ReactDOM.render(
+  <App
+    userToken = {window.userToken}
+  />, document.getElementById("react-app")
+);

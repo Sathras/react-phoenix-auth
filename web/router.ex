@@ -17,12 +17,17 @@ defmodule CrowdCrush.Router do
   scope "/", CrowdCrush do
     pipe_through :browser # Use the default browser stack
 
+
+
+    get "/logout", SessionController, :delete
     get "/*path", PageController, :index
 
-    get "/hello", HelloController, :world
+    # get "/hello", HelloController, :world
     get "/", PageController, :index
-    resources "/users", UserController, only: [:index, :show, :new, :create]
+
     resources "/sessions", SessionController, only: [:new, :create, :delete]
+    resources "/users", UserController, only: [:index, :show, :new, :create]
+
     get "/watch/:id", WatchController, :show
   end
 

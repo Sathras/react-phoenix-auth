@@ -3,25 +3,38 @@
 defmodule CrowdCrush.MainChannel do
   use CrowdCrush.Web, :channel
 
-  def join("main", _params, socket) do
+  def join("main:lobby", _params, socket) do
 
-    # get user data
-    user = Repo.get!(CrowdCrush.User, socket.assigns.user_id)
-    user = %{
-      :username => user.username,
-      :email => user.email,
-      :name => user.name
-    }
+    IO.inspect("test")
 
-    {:ok, %{user: user}, socket}
+    # get user data (if socket has a user authentificated)
+    # case socket.assigns.user_id do
+    #   nil -> {:ok, %{}, socket}
+    #     _ ->
+    #       user = Repo.get!(CrowdCrush.User, socket.assigns.user_id)
+    #       {:ok, %{user: %{
+    #         :username => user.username,
+    #         :email => user.email,
+    #         :name => user.name
+    #       }}, socket}
+    # end
+    data = %{:user => 9}
+    {:ok, data, socket}
+    # {:reply, {:ok, %{}}, socket}
+  end
+
+  # login
+  def handle_in("signIn", params, socket) do
+    IO.inspect(params)
+    {:reply, {:ok, %{}}, socket}
   end
 
   # if logout is requested, do so
   def handle_in("logout", _params, socket) do
 
-    if socket.assigns.user_id do
-      CrowdCrush.Auth.logout()
-    end
+    # if socket.assigns.user_id do
+    #   CrowdCrush.Auth.logout()
+    # end
 
   # IO.inspect(params)
 

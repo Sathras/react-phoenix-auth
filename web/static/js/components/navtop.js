@@ -16,8 +16,8 @@ class NavTop extends React.Component {
 
     this.state = {
       modal : false,         // options: register, login or false
-      email     : {value: '', valid: false},
-      password  : {value: '', valid: false},
+      email     : {value: 'web@fuchsberger.us', valid: true},
+      password  : {value: 'skarabaeus1', valid: true},
       password2 : {value: '', valid: false},
       username  : {value: '', valid: false},
       name      : {value: '', valid: true},
@@ -27,7 +27,8 @@ class NavTop extends React.Component {
   }
 
   componentDidUpdate(){
-    if(!this.state.submitted && this.state.modal) document.getElementById("auth-email").focus();
+    if(!this.state.submitted && this.state.modal && this.state.email.value === '')
+    document.getElementById("auth-email").focus();
   }
 
   changeMode(e, mode){
@@ -88,6 +89,10 @@ class NavTop extends React.Component {
     });
   }
 
+  switchPage(e){
+    e.preventDefault()
+    this.props.switchPage()
+  }
 
   validateForm (e){
 
@@ -113,7 +118,7 @@ class NavTop extends React.Component {
         this.state.username.valid &&
         this.state.name.valid
       )
-        this.props.signUn({
+        this.props.signUp({
           email: this.state.email.value,
           password: this.state.password.value,
           username: this.state.username.value,
@@ -136,7 +141,7 @@ class NavTop extends React.Component {
       ? <li><a href="/register" onClick={(e) => this.changeMode(e, 'register')}>Register</a></li>
       : null
 
-    var formHeadingTxt, formModeQuestion, formModeButton, formButtonTxt;
+    var formHeadingTxt, formModeQuestion, formModeButton, formButtonTxt, classColumnSize;
     var modalClass = 'modal-dialog'
 
     if (this.state.modal === 'register') {
@@ -145,12 +150,14 @@ class NavTop extends React.Component {
       formModeButton    = 'Sign in'
       formButtonTxt     = 'Sign up'
       modalClass       += ' modal-lg'
+      classColumnSize   = 'col-sm-6'
     } else {
       formHeadingTxt    = 'Sign in'
       formModeQuestion  = 'No account yet?'
       formModeButton    = 'Register here'
       formButtonTxt     = 'Sign in'
       modalClass       += ' modal-sm'
+      classColumnSize   = 'col-sm-12'
     }
 
     // validation classes for form fields
@@ -212,6 +219,15 @@ class NavTop extends React.Component {
     return (
       <nav className="navbar navbar-default">
         <div className="container">
+          <div className="navbar-header">
+            <button type="button" className="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+              <span className="sr-only">Toggle navigation</span>
+              <span className="icon-bar"></span>
+              <span className="icon-bar"></span>
+              <span className="icon-bar"></span>
+            </button>
+            <a className="navbar-brand" href="#" onClick={(e) => this.switchPage(e)}>Crowd Crush</a>
+          </div>
           <ul className="nav navbar-nav navbar-right">
             {regLink}
             {authLink}
@@ -232,7 +248,7 @@ class NavTop extends React.Component {
                 <div className="modal-body">
                     <p id='authFeedback' className="text-danger"></p>
                   <div className='row'>
-                    <div className='col-sm-6'>
+                    <div className={classColumnSize}>
                       <div className={classUsernameDiv}>
                         <label className="control-label" htmlFor="auth-username">Username*</label>
                         <input
@@ -272,7 +288,7 @@ class NavTop extends React.Component {
                         <span className="help-block">{errorName}</span>
                       </div>
                     </div>
-                    <div className='col-sm-6'>
+                    <div className={classColumnSize}>
                       <div className={classPasswordDiv}>
                         <label className="control-label" htmlFor="auth-password">Password*</label>
                         <input

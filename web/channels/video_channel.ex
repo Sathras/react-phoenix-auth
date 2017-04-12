@@ -3,6 +3,7 @@ defmodule CrowdCrush.VideoChannel do
   alias CrowdCrush.AnnotationView
 
   def join("videos:" <> video_id, params, socket) do
+    IO.puts(video_id)
     last_seen_id = params["last_seen_id"] || 0
     video_id = String.to_integer(video_id)
     video = Repo.get!(CrowdCrush.Video, video_id)

@@ -11,8 +11,6 @@ defmodule CrowdCrush do
       # Start the Ecto repository
       supervisor(CrowdCrush.Repo, []),
 
-      supervisor(CrowdCrush.InfoSys.Supervisor, []),
-
       # Start the endpoint when the application starts
       supervisor(CrowdCrush.Endpoint, []),
       # Start your own worker by calling: CrowdCrush.Worker.start_link(arg1, arg2, arg3)

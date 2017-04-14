@@ -1,9 +1,7 @@
 defmodule CrowdCrush.SessionController do
-  use CrowdCrush.Web, :controller
 
-  def new(conn, _) do
-    render conn, "new.html"
-  end
+  use CrowdCrush.Web, :controller
+  alias CrowdCrush.User
 
   def create(conn, %{"session" => %{"email" => email, "password" => pass}}) do
     case CrowdCrush.Auth.login_by_email_and_pass(conn, email, pass, repo: Repo) do
@@ -12,9 +10,14 @@ defmodule CrowdCrush.SessionController do
         |> put_flash(:info, "Welcome back!")
         |> redirect(to: page_path(conn, :index))
       {:error, _reason, conn} ->
+
+        changeset = User.login_changeset(%User{})
+        conn = ShatteredAscension.PageController.index(conn, nil)
+
         conn
+        |> assign(:error, "signIn")
         |> put_flash(:error, "Invalid email/password combination")
-        |> render("new.html")
+        |> render(ShatteredAscension.PageView, "index.html", changeset: changeset)
     end
   end
 

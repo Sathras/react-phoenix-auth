@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="A research Tool">
+    <meta name="author" content="Alexander Fuchsberger">
+
+    <title>Crowd Crush</title>
+    <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
+  </head>
+
+  <body>
+    <%= render CrowdCrush.LayoutView, "navtop.html", assigns %>
+    <%= render @view_module, @view_template, assigns %>
+
+    <script type="text/javascript">
+      window.error = <%= if assigns[:error] do %>"<%= assigns[:error] %>"<% else %> false <% end %>;
+      window.userToken = "<%= assigns[:user_token] %>";
+    </script>
+    <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
+  </body>
+</html>

@@ -13,27 +13,26 @@ defmodule CrowdCrush.User do
     timestamps()
   end
 
-  def changeset(model, params \\ :empty) do
+  def login_changeset(model, params \\ :empty) do
     model
     |> cast(params, ~w(email password))
     |> validate_required([:email, :password])
     |> validate_format(:email, ~r/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)
   end
 
+  # username
+  # no _ or . at the beginning
+  # no __ or _. or ._ or .. inside
+  # allowed characters: a-zA-Z0-9._
+  # no _ or . at the end
+
+  # password
+  # at least 1 number and alphapetic
+  # allowed characters: a-zA-Z0-9$@$!%*?&
+
   def registration_changeset(model, params) do
-
-    # username
-    # no _ or . at the beginning
-    # no __ or _. or ._ or .. inside
-    # allowed characters: a-zA-Z0-9._
-    # no _ or . at the end
-
-    # password
-    # at least 1 number and alphapetic
-    # allowed characters: a-zA-Z0-9$@$!%*?&
-
     model
-    |> changeset(params)
+    |> login_changeset(params)
     |> cast(params, ~w(name username))
     |> validate_required([:username])
     |> validate_length(:username, min: 3, max: 20)

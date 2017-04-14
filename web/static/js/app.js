@@ -43,14 +43,9 @@ class App extends React.Component {
     this.signIn = this.signIn.bind(this)
     this.logout = this.logout.bind(this)
 
-    // define channels
-    // this.channelMain = socket.channel("main");
-    // let socket = new Socket( "/socket", {
-    //   params: { token: window.userToken },
-    // })
-
-    this.lobby = this.props.socket.channel("main:lobby");
-
+    // connect socket and define mainChannel
+    this.props.socket.connect()
+    this.mainChannel = this.props.socket.channel("main");
 
     this.state = {
       path : window.path,
@@ -60,16 +55,9 @@ class App extends React.Component {
 
   componentDidMount(){
 
-    // join base channels
+    // join mainChannel
+    this.mainChannel.join().receive("ok", (data) => this.setState(data))
 
-    this.lobby.join().receive("ok", function(){console.log('successful')})
-      // .receive("ok", (data) => this.setState(data, function(){ console.log("cb")}))
-      //   this.setState(data);
-      //   console.log(channelMain);
-
-      // })
-      .receive("error", reason => console.log("Connection to the channel could not be established: ", reason) )
-    console.log(this.lobby)
     // enable to move forward and backward in browser history
     window.addEventListener('popstate', function(e){
       this.setState({path : e.state || '/'});
@@ -78,13 +66,13 @@ class App extends React.Component {
   }
 
   signIn (authData){
-    this.lobby.push("signIn", authData)
+    this.mainChannel.push("signIn", authData)
       .receive("ok", res => console.log(res))
       .receive("error", res => console.log(res))
   }
 
   logout(){
-    this.channelMain.push("logout")
+    this.mainChannel.push("logout")
       .receive("ok", location.reload())
   }
 
@@ -112,29 +100,12 @@ class App extends React.Component {
 }
 
 
+let socket = new Socket( "/socket", { params: { token: window.userToken } })
 
 
-// ReactDOM.render(
-//   <App
-//     socket = {socket}
-//     userToken = {window.userToken}
-//   />, document.getElementById("react-app")
-// );
-
-// import {Socket} from "phoenix"
-
-let socket = new Socket( "/socket", {
-  params: { token: window.userToken || "sfjoweroi" },
-})
-
-socket.connect()
-
-
-console.log(window.userToken)
-let lobby = socket.channel("main:lobby");
-
-lobby.join()
-.receive("ok", function(){  console.log('successful')})
-.receive("error", reason => console.log("Connection to the channel could not be established: ", reason) )
-
-setTimeout(function(){console.log(lobby)}, 1000)
+ReactDOM.render(
+  <App
+    socket = {socket}
+    userToken = {window.userToken}
+  />, document.getElementById("react-app")
+);

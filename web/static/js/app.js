@@ -92,6 +92,7 @@ class App extends React.Component {
           switchPage = {this.switchPage}
           signIn     = {this.signIn}
           logout     = {this.logout}
+          csrfToken  = {this.props.csrfToken}
         />
         {this.state.path}
       </div>
@@ -99,13 +100,23 @@ class App extends React.Component {
   }
 }
 
-
 let socket = new Socket( "/socket", { params: { token: window.userToken } })
-
 
 ReactDOM.render(
   <App
+    flash = {window.flash}
     socket = {socket}
+    csrfToken = {window.csrfToken}
     userToken = {window.userToken}
   />, document.getElementById("react-app")
 );
+
+// var App = {
+//   init : function(){
+//     switch (page) {
+//       case '/signIn' : console.log('Welcome'); break;
+//     }
+//   }
+// };
+
+// App.init();

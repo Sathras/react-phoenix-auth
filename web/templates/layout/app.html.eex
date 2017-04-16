@@ -12,8 +12,26 @@
   </head>
 
   <body>
+    <script type='text/javascript'> page = null; </script>
     <%= render CrowdCrush.LayoutView, "navtop.html", assigns %>
-    <%= render @view_module, @view_template, assigns %>
+
+    <div class="container">
+      <%= if get_flash(@conn, :info) do %>
+        <div class="alert alert-info alert-dismissible" role="alert">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+          <%= get_flash(@conn, :info) %>
+        </div>
+      <% end %>
+      <%= if get_flash(@conn, :error) do %>
+        <div class="alert alert-danger alert-dismissible" role="alert">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span>
+          <%= get_flash(@conn, :error) %>
+        </div>
+      <% end %>
+      <%= render @view_module, @view_template, assigns %>
+    </div>
 
     <script type="text/javascript">
       window.error = <%= if assigns[:error] do %>"<%= assigns[:error] %>"<% else %> false <% end %>;

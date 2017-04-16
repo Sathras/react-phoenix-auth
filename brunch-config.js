@@ -81,9 +81,9 @@ exports.config = {
 
     globals : {
       // bootstrap-sass' JavaScript requires both '$' and 'jQuery' in global scope
-      // $: 'jquery',
-      // jQuery: 'jquery',
-      // bootstrap: 'bootstrap-sass' // require bootstrap-sass' JavaScript globally
+      $: 'jquery',
+      jQuery: 'jquery',
+      bootstrap: 'bootstrap-sass' // require bootstrap-sass' JavaScript globally
     },
 
     // Whitelist the npm deps to be pulled in as front-end assets.

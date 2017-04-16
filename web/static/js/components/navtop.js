@@ -17,7 +17,7 @@ class NavTop extends React.Component {
     this.state = {
       modal : false,         // options: register, login or false
       email     : {value: 'web@fuchsberger.us', valid: true},
-      password  : {value: 'skarabaeus1', valid: true},
+      password  : {value: 'skarabaeus', valid: true},
       password2 : {value: '', valid: false},
       username  : {value: '', valid: false},
       name      : {value: '', valid: true},
@@ -99,11 +99,7 @@ class NavTop extends React.Component {
     e.preventDefault();
 
     if(this.state.modal === 'login'){
-      if(this.state.email.valid && this.state.password.valid)
-        this.props.signIn({
-          email: this.state.email.value,
-          password: this.state.password.value
-        })
+      if(this.state.email.valid && this.state.password.valid) document.getElementById('authForm').submit();
       else
         this.setState({
           submitted: true
@@ -134,17 +130,18 @@ class NavTop extends React.Component {
   render (){
 
     var authLink = (this.props.user)
-      ? <li><a href="/logout">Logout</a></li>
-      : <li><a href="/login" onClick={(e) => this.changeMode(e, 'login')}>Login</a></li>
+      ? <li><a href="/signout">Logout</a></li>
+      : <li><a href="/signin" onClick={(e) => this.changeMode(e, 'login')}>Login</a></li>
 
     var regLink = (!this.props.user)
-      ? <li><a href="/register" onClick={(e) => this.changeMode(e, 'register')}>Register</a></li>
+      ? <li><a href="/signup" onClick={(e) => this.changeMode(e, 'register')}>Register</a></li>
       : null
 
-    var formHeadingTxt, formModeQuestion, formModeButton, formButtonTxt, classColumnSize;
+    var formHeadingTxt, formModeQuestion, formModeButton, formButtonTxt, classColumnSize, formAction;
     var modalClass = 'modal-dialog'
 
     if (this.state.modal === 'register') {
+      formAction        = '/signup'
       formHeadingTxt    = 'Register'
       formModeQuestion  = 'Already have an account?'
       formModeButton    = 'Sign in'
@@ -152,6 +149,7 @@ class NavTop extends React.Component {
       modalClass       += ' modal-lg'
       classColumnSize   = 'col-sm-6'
     } else {
+      formAction        = '/signin'
       formHeadingTxt    = 'Sign in'
       formModeQuestion  = 'No account yet?'
       formModeButton    = 'Register here'
@@ -236,6 +234,11 @@ class NavTop extends React.Component {
         <div id='modal-auth' className="modal fade in" role="dialog" style={{
           display: (this.state.modal) ? 'block' : 'none'
         }}>
+        <form id="authForm" acceptCharset="UTF-8" action={formAction} method="post" onSubmit={(e) => this.validateForm(e)}>
+
+          <input name="_csrf_token" type="hidden" value={this.props.csrfToken} />
+          <input name="_utf8" type="hidden" value="✓" />
+
           <div className={modalClass} role="document">
             <div className="modal-content">
               <div className="modal-header">
@@ -244,91 +247,94 @@ class NavTop extends React.Component {
                 </button>
                 <h3 className="modal-title">{formHeadingTxt}</h3>
               </div>
-              <form onSubmit={(e) => this.validateForm(e)}>
-                <div className="modal-body">
-                    <p id='authFeedback' className="text-danger"></p>
-                  <div className='row'>
-                    <div className={classColumnSize}>
-                      <div className={classUsernameDiv}>
-                        <label className="control-label" htmlFor="auth-username">Username*</label>
-                        <input
-                          id="auth-username"
-                          type="text"
-                          className="form-control"
-                          placeholder="Username"
-                          value={this.state.username.value}
-                          onChange={this.changeUsername}
-                        />
-                        <span className="help-block">{errorUsername}</span>
-                      </div>
-
-                      <div className={classEmailDiv}>
-                        <label className="control-label" htmlFor="auth-email">Email*</label>
-                        <input
-                          id="auth-email"
-                          type="text"
-                          className="form-control"
-                          placeholder="Email"
-                          value={this.state.email.value}
-                          onChange={this.changeEmail}
-                        />
-                        <span className="help-block">{errorEmail}</span>
-                      </div>
-
-                      <div className={classNameDiv}>
-                        <label className="control-label" htmlFor="auth-name">Name</label>
-                        <input
-                          id="auth-name"
-                          type="text"
-                          className="form-control"
-                          placeholder="Name"
-                          value={this.state.name.value}
-                          onChange={this.changeName}
-                        />
-                        <span className="help-block">{errorName}</span>
-                      </div>
+              <div className="modal-body">
+                  <p id='authFeedback' className="text-danger"></p>
+                <div className='row'>
+                  <div className={classColumnSize}>
+                    <div className={classUsernameDiv}>
+                      <label className="control-label" htmlFor="auth-username">Username*</label>
+                      <input
+                        id="user-username"
+                        name="user[username]"
+                        type="text"
+                        className="form-control"
+                        placeholder="Username"
+                        value={this.state.username.value}
+                        onChange={this.changeUsername}
+                      />
+                      <span className="help-block">{errorUsername}</span>
                     </div>
-                    <div className={classColumnSize}>
-                      <div className={classPasswordDiv}>
-                        <label className="control-label" htmlFor="auth-password">Password*</label>
-                        <input
-                          id="auth-password"
-                          type="password"
-                          className="form-control"
-                          placeholder="Password"
-                          value={this.state.password.value}
-                          onChange={this.changePassword}
-                          autoComplete="off"
-                        />
-                        <span className="help-block">{errorPassword}</span>
-                      </div>
-                      <div className={classPassword2Div}>
-                        <label className="control-label" htmlFor="auth-password2">Confirm Password*</label>
-                        <input
-                          id="auth-password2"
-                          type="password"
-                          className="form-control"
-                          placeholder="Confirm Password"
-                          value={this.state.password2.value}
-                          onChange={this.changePassword2}
-                          autoComplete="off"
-                        />
-                        <span className="help-block">{errorPassword2}</span>
-                      </div>
+
+                    <div className={classEmailDiv}>
+                      <label className="control-label" htmlFor="auth-email">Email*</label>
+                      <input
+                        id="user-email"
+                        name="user[email]"
+                        type="text"
+                        className="form-control"
+                        placeholder="Email"
+                        value={this.state.email.value}
+                        onChange={this.changeEmail}
+                      />
+                      <span className="help-block">{errorEmail}</span>
+                    </div>
+
+                    <div className={classNameDiv}>
+                      <label className="control-label" htmlFor="auth-name">Name</label>
+                      <input
+                        id="user-name"
+                        name="user[name]"
+                        type="text"
+                        className="form-control"
+                        placeholder="Name"
+                        value={this.state.name.value}
+                        onChange={this.changeName}
+                      />
+                      <span className="help-block">{errorName}</span>
                     </div>
                   </div>
-                    <p>{formModeQuestion} <a onClick={(e) => this.changeMode(e,
-                      (this.state.modal === 'register') ? 'login' : 'register')}>
-                      {formModeButton}</a>
-                    </p>
+                  <div className={classColumnSize}>
+                    <div className={classPasswordDiv}>
+                      <label className="control-label" htmlFor="auth-password">Password*</label>
+                      <input
+                        id="user-password"
+                        name="user[password]"
+                        type="password"
+                        className="form-control"
+                        placeholder="Password"
+                        value={this.state.password.value}
+                        onChange={this.changePassword}
+                        autoComplete="off"
+                      />
+                      <span className="help-block">{errorPassword}</span>
+                    </div>
+                    <div className={classPassword2Div}>
+                      <label className="control-label" htmlFor="auth-password2">Confirm Password*</label>
+                      <input
+                        id="user-password2"
+                        type="password"
+                        className="form-control"
+                        placeholder="Confirm Password"
+                        value={this.state.password2.value}
+                        onChange={this.changePassword2}
+                        autoComplete="off"
+                      />
+                      <span className="help-block">{errorPassword2}</span>
+                    </div>
+                  </div>
                 </div>
-                <div className="modal-footer">
-                  <button type="button" className="btn btn-default" onClick={(e) => this.changeMode(e, false)}>Cancel</button>
-                  <button type="submit" className="btn btn-primary">{formButtonTxt}</button>
-                </div>
-              </form>
+                  <p>{formModeQuestion} <a onClick={(e) => this.changeMode(e,
+                    (this.state.modal === 'register') ? 'login' : 'register')}>
+                    {formModeButton}</a>
+                  </p>
+              </div>
+              <div className="modal-footer">
+                <button type="button" className="btn btn-default" onClick={(e) => this.changeMode(e, false)}>Cancel</button>
+                <button type="submit" className="btn btn-primary">{formButtonTxt}</button>
+              </div>
             </div>
           </div>
+        </form>
         </div>
       </nav>
     )

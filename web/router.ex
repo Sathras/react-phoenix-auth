@@ -7,6 +7,7 @@ defmodule CrowdCrush.Router do
     plug :fetch_flash
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug :put_layout, false                     # globally disables layouts
     plug CrowdCrush.Auth, repo: CrowdCrush.Repo
   end
 
@@ -15,12 +16,13 @@ defmodule CrowdCrush.Router do
   end
 
   scope "/", CrowdCrush do
+
     pipe_through :browser # Use the default browser stack
 
-
-
-    get "/logout", SessionController, :delete
-    get "/*path", PageController, :index
+    post "/signin", PageController, :signin
+    get "/signup", UserController, :new
+    get "/logout", PageController, :signout
+    get "/*path",  PageController, :index
 
     # get "/hello", HelloController, :world
     get "/", PageController, :index

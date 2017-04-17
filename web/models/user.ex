@@ -9,15 +9,7 @@ defmodule CrowdCrush.User do
     field :password_hash, :string
     has_many :videos, CrowdCrush.Video
     has_many :annotations, CrowdCrush.Annotation
-
     timestamps()
-  end
-
-  def login_changeset(model, params \\ :empty) do
-    model
-    |> cast(params, ~w(email password))
-    |> validate_required([:email, :password])
-    |> validate_format(:email, ~r/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)
   end
 
   # username
@@ -30,15 +22,16 @@ defmodule CrowdCrush.User do
   # at least 1 number and alphapetic
   # allowed characters: a-zA-Z0-9$@$!%*?&
 
-  def registration_changeset(model, params) do
+  def changeset(model, params) do
     model
-    |> login_changeset(params)
-    |> cast(params, ~w(name username))
-    |> validate_required([:username])
+    |> cast(params, ~w(email password name username))
+    |> validate_required([:username, :email, :password])
     |> validate_length(:username, min: 3, max: 20)
     |> validate_length(:password, min: 8, max: 100)
+    |> validate_length(:name, max: 50)
+    |> validate_format(:email, ~r/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)
     |> validate_format(:username, ~r/^(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$/)
-    # |> validate_format(:password, ~r/^(?=.*[A-Za-z])[a-zA-Z0-9$@$!%*?&]$/)
+    |> validate_format(:password, ~r/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,100}$/)
     |> unique_constraint(:username) # save unique_constraint for last as DB call
     |> unique_constraint(:email) # save unique_constraint for last as DB call
     |> put_pass_hash()

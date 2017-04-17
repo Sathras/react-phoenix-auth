@@ -20,14 +20,13 @@ defmodule CrowdCrush.Router do
     pipe_through :browser # Use the default browser stack
 
     post "/signin", PageController, :signin
-    get "/signup", UserController, :new
-    get "/logout", PageController, :signout
-    get "/*path",  PageController, :index
+    post "/signup", PageController, :signup
+    get "/signout", PageController, :signout
+    get "/*path",   PageController, :index
 
     # get "/hello", HelloController, :world
     get "/", PageController, :index
 
-    resources "/sessions", SessionController, only: [:new, :create, :delete]
     resources "/users", UserController, only: [:index, :show, :new, :create]
 
     get "/watch/:id", WatchController, :show

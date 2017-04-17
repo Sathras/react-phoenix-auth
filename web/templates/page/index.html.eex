@@ -15,25 +15,35 @@
 
     <div id='react-app'></div>
 
-  <%= form_for @conn, session_path(@conn, :create), [as: :session], fn f -> %>
-    <div class="form-group">
-      <%= email_input f, :email, placeholder: "Email", class: "form-control" %>
-    </div>
-    <div class="form-group">
-      <%= password_input f, :password, placeholder: "Password", class: "form-control" %>
-    </div>
-    <%= submit "Log in", class: "btn btn-primary" %>
-  <% end %>
-
-
-
 
     <script type="text/javascript">
+
+      window.authFields = {
+        email : {
+          error : "<%= if @changeset.errors[:email] do elem(@changeset.errors[:email], 0) end %>",
+          value : "<%= @changeset.changes[:email] %>"
+        },
+        password : {
+          error : "<%= if @changeset.errors[:password] do elem(@changeset.errors[:password], 0) end %>",
+          value : ""
+        },
+        username : {
+          error : "<%= if @changeset.errors[:username] do elem(@changeset.errors[:username], 0) end %>",
+          value : "<%= @changeset.changes[:username] %>"
+        },
+        name : {
+          error : "<%= if @changeset.errors[:name] do elem(@changeset.errors[:name], 0) end %>",
+          value : "<%= @changeset.changes[:name] %>"
+        }
+      }
+
+      window.error = <%= if assigns[:error] do %>"<%= assigns[:error] %>"<% else %>null<% end %>
       window.flash = {
         error : <%= if get_flash(@conn, :error ) do %>"<%= get_flash(@conn, :error ) %>"<% else %>null<% end %>,
         info  : <%= if get_flash(@conn, :info ) do %>"<%= get_flash(@conn, :info ) %>"<% else %>null<% end %>
       }
       window.csrfToken = "<%= get_csrf_token() %>"
+      window.userID = <%= if @current_user do @current_user.id else "null" end %>
       window.userToken = <%= if assigns[:user_token] do %>"<%= assigns[:user_token] %>"<% else %>null<% end %>
     </script>
     <script src="<%= static_path(@conn, "/js/app.js") %>"></script>

@@ -2,31 +2,38 @@ defmodule CrowdCrush.PageController do
   use CrowdCrush.Web, :controller
   alias CrowdCrush.User
 
-  def action(conn, _) do
-    apply(__MODULE__, action_name(conn),
-      [conn, conn.params, conn.assigns.current_user])
+  def index(conn, params) do
+    changeset = User.changeset(%User{}, params)
+    render(conn, "index.html", changeset: changeset)
   end
 
-  def index(conn, params, user) do
-    # check if user is authentificated
-    case user do
-      nil -> render(conn, "index.html")
-      _   ->
-        # if not authentificated attach changeset
-        changeset = User.registration_changeset(%User{}, params)
-        render(conn, "index.html", changeset: changeset)
+  def signup(conn, %{"user" => user_params}) do
+    changeset = User.changeset(%User{}, user_params)
+    case Repo.insert(changeset) do
+      {:ok, user} ->
+        conn
+        |> CrowdCrush.Auth.login(user)
+        |> put_flash(:info, "Thanks for signing up, #{user.username}!")
+        |> redirect(to: page_path(conn, :index))
+      {:error, changeset} ->
+        IO.inspect(changeset)
+        conn
+        |> assign(:error, "signup")
+        |> put_flash(:error, "Registration failed.")
+        |> render("index.html", changeset: changeset)
     end
   end
 
-  def signin(conn, %{"user" => %{"email" => email, "password" => pass}}, user) do
+  def signin(conn, %{"user" => %{"email" => email, "password" => pass}}) do
     case CrowdCrush.Auth.login_by_email_and_pass(conn, email, pass, repo: Repo) do
       {:ok, conn} ->
         conn
         |> put_flash(:info, "Welcome back!")
         |> redirect(to: page_path(conn, :index))
       {:error, _reason, conn} ->
-        changeset = User.login_changeset(%User{}, %{email: email, password: pass})
+        changeset = User.changeset(%User{}, %{email: email, password: pass})
         conn
+        |> assign(:error, "signin")
         |> put_flash(:error, "Invalid username/password combination")
         |> render("index.html", changeset: changeset)
     end

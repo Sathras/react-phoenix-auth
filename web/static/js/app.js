@@ -49,7 +49,7 @@ class App extends React.Component {
 
     this.state = {
       path : window.path,
-      user : null
+      user : window.userID
     };
   }
 
@@ -88,11 +88,13 @@ class App extends React.Component {
     return (
       <div id='app'>
         <NavTop
-          user       = {this.state.user}
-          switchPage = {this.switchPage}
-          signIn     = {this.signIn}
-          logout     = {this.logout}
           csrfToken  = {this.props.csrfToken}
+          error      = {this.props.error}
+          fields     = {this.props.authFields}
+          logout     = {this.logout}
+          signIn     = {this.signIn}
+          switchPage = {this.switchPage}
+          user       = {this.state.user}
         />
         {this.state.path}
       </div>
@@ -104,6 +106,8 @@ let socket = new Socket( "/socket", { params: { token: window.userToken } })
 
 ReactDOM.render(
   <App
+    authFields = {window.authFields}
+    error = {window.error}
     flash = {window.flash}
     socket = {socket}
     csrfToken = {window.csrfToken}

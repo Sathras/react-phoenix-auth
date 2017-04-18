@@ -23,8 +23,10 @@ import ReactDOM from "react-dom"
 
 // import socket from "./socket"
 // import {Socket} from "phoenix"
+import ErrorPage from "./components/error_page"
+import Home from "./components/home"
 import NavTop from "./components/navtop"
-
+import Settings from "./components/settings"
 // import Video from "./video"
 
 // let video = document.getElementById("video") ;
@@ -46,6 +48,7 @@ class App extends React.Component {
     // connect socket and define mainChannel
     this.props.socket.connect()
     this.mainChannel = this.props.socket.channel("main");
+    this.userChannel = this.props.socket.channel("user:"+ (window.userID || ""));
 
     this.state = {
       path : window.path,
@@ -57,6 +60,10 @@ class App extends React.Component {
 
     // join mainChannel
     this.mainChannel.join().receive("ok", (data) => this.setState(data))
+
+    if (this.state.user) this.userChannel.join()
+      .receive("ok", () => console.log("authentificated."))
+      .receive("error", () => console.log("denied."))
 
     // enable to move forward and backward in browser history
     window.addEventListener('popstate', function(e){
@@ -76,7 +83,7 @@ class App extends React.Component {
       .receive("ok", location.reload())
   }
 
-  switchPage (page = '/'){
+  switchPage (page = "/"){
     if(page === this.state.path) return;
     // add new page to browser history api
     window.history.pushState(page, null, page);
@@ -84,6 +91,23 @@ class App extends React.Component {
   }
 
   render (){
+
+    var pageContent = null
+
+    switch(this.state.path){
+
+      case "":
+      case "/":
+        pageContent = <Home />
+        break;
+
+      case "settings":
+        if(this.state.user) pageContent = <Settings />
+        else pageContent = <ErrorPage type="unauthorized" />
+        break;
+
+      default: pageContent = <ErrorPage type="notfound" />
+    }
 
     return (
       <div id='app'>
@@ -96,7 +120,7 @@ class App extends React.Component {
           switchPage = {this.switchPage}
           user       = {this.state.user}
         />
-        {this.state.path}
+        {pageContent}
       </div>
     )
   }

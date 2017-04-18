@@ -4,7 +4,10 @@ defmodule CrowdCrush.PageController do
 
   def index(conn, params) do
     changeset = User.changeset(%User{}, params)
-    render(conn, "index.html", changeset: changeset)
+    IO.inspect(params)
+    conn
+    |> assign(:path, params[:path])
+    |> render("index.html", changeset: changeset)
   end
 
   def signup(conn, %{"user" => user_params}) do

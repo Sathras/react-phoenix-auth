@@ -22,10 +22,12 @@ defmodule CrowdCrush.Router do
     post "/signin", PageController, :signin
     post "/signup", PageController, :signup
     get "/signout", PageController, :signout
-    get "/*path",   PageController, :index
+
+    get "/",        PageController, :index
+    get "/:path",   PageController, :index
 
     # get "/hello", HelloController, :world
-    get "/", PageController, :index
+
 
     resources "/users", UserController, only: [:index, :show, :new, :create]
 

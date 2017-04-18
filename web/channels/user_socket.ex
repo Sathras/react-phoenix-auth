@@ -3,6 +3,7 @@ defmodule CrowdCrush.UserSocket do
 
   ## Channels
   channel "main", CrowdCrush.MainChannel
+  channel "user:*", CrowdCrush.UserChannel
   channel "videos:*", CrowdCrush.VideoChannel
 
   ## Transports

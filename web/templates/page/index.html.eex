@@ -36,13 +36,13 @@
           value : "<%= @changeset.changes[:name] %>"
         }
       }
-
+      window.csrfToken = "<%= get_csrf_token() %>"
       window.error = <%= if assigns[:error] do %>"<%= assigns[:error] %>"<% else %>null<% end %>
       window.flash = {
         error : <%= if get_flash(@conn, :error ) do %>"<%= get_flash(@conn, :error ) %>"<% else %>null<% end %>,
         info  : <%= if get_flash(@conn, :info ) do %>"<%= get_flash(@conn, :info ) %>"<% else %>null<% end %>
       }
-      window.csrfToken = "<%= get_csrf_token() %>"
+      window.path = "<%= assigns[:path] || "/" %>"
       window.userID = <%= if @current_user do @current_user.id else "null" end %>
       window.userToken = <%= if assigns[:user_token] do %>"<%= assigns[:user_token] %>"<% else %>null<% end %>
     </script>

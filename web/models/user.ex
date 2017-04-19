@@ -37,6 +37,15 @@ defmodule CrowdCrush.User do
     |> put_pass_hash()
   end
 
+  def changeset_update(model, params) do
+    model
+    |> cast(params, ~w(email password))
+    |> validate_format(:password, ~r/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,100}$/)
+    |> validate_format(:email, ~r/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)
+    |> unique_constraint(:email) # save unique_constraint for last as DB call
+    |> put_pass_hash()
+  end
+
   defp put_pass_hash(changeset) do
     case changeset do
       %Ecto.Changeset{valid?: true, changes: %{password: pass}} ->

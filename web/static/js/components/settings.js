@@ -7,7 +7,6 @@ class Settings extends React.Component {
     super(props);
 
     this.changeField  = this.changeField.bind(this);
-    this.printInput   = this.printInput.bind(this);
     this.submitChange = this.submitChange.bind(this);
 
     this.error = {
@@ -97,30 +96,6 @@ class Settings extends React.Component {
     this.setState(state)
   }
 
-  // Print Input Field
-  printInput (field, classDiv, label, placeholder, type="text") {
-
-    var error = null
-    if(this.state.submitted && this.state[field].error)
-      error = this.state[field].error
-
-    return(
-      <div className={classDiv}>
-        <label className="control-label" htmlFor={field}>{label}</label>
-        <input
-          id={field}
-          name={field}
-          type={type}
-          className="form-control"
-          placeholder={placeholder}
-          value={this.state[field].value}
-          onChange = {this.changeField}
-        />
-        <span className="help-block">{error}</span>
-      </div>
-    );
-  }
-
   submitChange (e){
     e.preventDefault();
 
@@ -135,7 +110,19 @@ class Settings extends React.Component {
           || !state.newPassword2.valid || !state.newEmail.valid )
       state.errorMsg = `Please check the errors below:`
 
-    if(!state.errorMsg) state.infoMsg = "Congrats everything is fine!"
+    // if all went well push to server and attempt to alter
+    if(!state.errorMsg){
+      state.infoMsg = "Please wait..."
+
+      var data = { oldPassword : state.oldPassword.value }
+      if (state.newPassword.value.length > 0) data.password = state.newPassword.value
+      if (state.newEmail.value.length > 0) data.email = state.newEmail.value
+
+      console.log(state)
+
+      this.props.userChannel.push("changeUserSettings", data)
+        .receive('ok', () => this.setState({infoMsg:"Congrats everything is fine!"}))
+    }
 
     this.setState(state);
   }
@@ -222,8 +209,3 @@ class Settings extends React.Component {
 }
 
 export default Settings
-
-              // {this.printInput('oldPassword', classDiv['oldPassword'], 'Old Password*', 'Old Password', 'password')}
-              // {this.printInput('newPassword', classDiv['newPassword'], 'New Password', 'New Password', 'password')}
-              // {this.printInput('newPassword2', classDiv['newPassword2'], 'Confirm new Password', 'Confirm Password', 'password')}
-              // {this.printInput('newEmail', classDiv['newEmail'], 'New Email*', 'New Email')}

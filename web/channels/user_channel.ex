@@ -2,7 +2,9 @@
 
 defmodule CrowdCrush.UserChannel do
 
+  import Comeonin.Bcrypt, only: [checkpw: 2, dummy_checkpw: 0]
   use CrowdCrush.Web, :channel
+  alias CrowdCrush.User
 
   def join("user:" <> user_id, _params, socket) do
 
@@ -14,4 +16,35 @@ defmodule CrowdCrush.UserChannel do
     end
   end
 
+  def handle_in("changeUserSettings", params, socket) do
+
+    # see if old password matches the one in database
+    user = Repo.get_by(CrowdCrush.User, id: socket.assigns.user_id)
+
+    cond do
+      # old password matched --> continue
+      user && checkpw(params["oldPassword"], user.password_hash) ->
+
+        # apply changeset to see if changes are valid
+        params = Map.delete(params, "oldPassword")
+        changeset = User.changeset_update(user, params)
+
+        # change email / password and respond to client
+        case Repo.update(changeset) do
+          {:ok, user} ->
+            {:reply, :ok, socket}
+          {:error, changeset} ->
+            {:error, :invalid_data, socket}
+        end
+
+      # old password was wrong --> unauthorized
+      user ->
+        {:error, :unauthorized, socket}
+
+      # user not found (should never happen)
+      true ->
+        dummy_checkpw()
+        {:error, :not_found, socket}
+    end
+  end
 end

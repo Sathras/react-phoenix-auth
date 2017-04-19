@@ -35,8 +35,6 @@ class NavTop extends React.Component {
     fields.name.valid = (fields.name.error == "") ? true : false
 
     this.state = Object.assign(fields, {
-      email : { valid: true, value: "web@fuchsberger.us", error: "" },
-      password : { valid: true, value: "skarabaeus", error: "" },
       password2 : { valid: false, value: "", error: "" },
       modal     : (this.props.error) ? this.props.error : false,
       submitted : (this.props.error) ? true : false
@@ -46,7 +44,7 @@ class NavTop extends React.Component {
 
   componentDidUpdate(){
     if(!this.state.submitted && this.state.modal && this.state.email.value === '')
-    document.getElementById("email").focus();
+    document.getElementById("auth-email").focus();
   }
 
   changeMode(e, mode){
@@ -96,9 +94,9 @@ class NavTop extends React.Component {
     }
   }
 
-  switchPage(e, page="/"){
+  switchPage(e){
     e.preventDefault()
-    this.props.switchPage(page)
+    this.props.switchPage()
   }
 
   // Print Input Field
@@ -146,28 +144,12 @@ class NavTop extends React.Component {
   render (){
 
     var authLink = (this.props.user)
-      ? <li>
-          <a href="/signout">
-            <span className="glyphicon glyphicon-off" aria-hidden="true"></span> Logout
-          </a>
-        </li>
-      : <li>
-          <a href="/signin" onClick={(e) => this.changeMode(e, 'signin')}>
-            <span className="glyphicon glyphicon-off" aria-hidden="true"></span> Login
-          </a>
-        </li>
+      ? <li><a href="/signout">Logout</a></li>
+      : <li><a href="/signin" onClick={(e) => this.changeMode(e, 'signin')}>Login</a></li>
 
     var regLink = (!this.props.user)
-      ? <li>
-          <a href="/signup" onClick={(e) => this.changeMode(e, 'signup')}>
-            Register
-          </a>
-        </li>
-      : <li>
-          <a href="/settings" onClick={(e) => this.switchPage(e, 'settings')}>
-            <span className="glyphicon glyphicon-cog" aria-hidden="true"></span> Settings
-          </a>
-        </li>
+      ? <li><a href="/signup" onClick={(e) => this.changeMode(e, 'signup')}>Register</a></li>
+      : null
 
     var reg = (this.state.modal === 'signup') ? true : false;
 
@@ -221,7 +203,7 @@ class NavTop extends React.Component {
               <span className="icon-bar"></span>
               <span className="icon-bar"></span>
             </button>
-            <a className="navbar-brand" href="/" onClick={(e) => this.switchPage(e)}>Crowd Crush</a>
+            <a className="navbar-brand" href="#" onClick={(e) => this.switchPage(e)}>Crowd Crush</a>
           </div>
           <ul className="nav navbar-nav navbar-right">
             {regLink}

@@ -61,9 +61,11 @@ class App extends React.Component {
     // join mainChannel
     this.mainChannel.join().receive("ok", (data) => this.setState(data))
 
-    if (this.state.user) this.userChannel.join()
-      .receive("ok", () => console.log("authentificated."))
-      .receive("error", () => console.log("denied."))
+    // features that get enabled when authentificated
+    if (this.state.user){
+      this.userChannel.join();
+
+    }
 
     // enable to move forward and backward in browser history
     window.addEventListener('popstate', function(e){
@@ -102,7 +104,10 @@ class App extends React.Component {
         break;
 
       case "settings":
-        if(this.state.user) pageContent = <Settings />
+        if(this.state.user) pageContent =
+          <Settings
+            userChannel = {this.userChannel}
+          />
         else pageContent = <ErrorPage type="unauthorized" />
         break;
 
@@ -120,7 +125,9 @@ class App extends React.Component {
           switchPage = {this.switchPage}
           user       = {this.state.user}
         />
-        {pageContent}
+        <div className="container">
+          {pageContent}
+        </div>
       </div>
     )
   }

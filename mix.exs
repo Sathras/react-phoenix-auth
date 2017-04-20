@@ -1,8 +1,8 @@
-defmodule CrowdCrush.Mixfile do
+defmodule ReactPhoenixAuth.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :crowd_crush,
+    [app: :react_phoenix_auth,
      version: "0.0.1",
      elixir: "~> 1.2",
      elixirc_paths: elixirc_paths(Mix.env),
@@ -17,7 +17,7 @@ defmodule CrowdCrush.Mixfile do
   #
   # Type `mix help compile.app` for more information.
   def application do
-    [mod: {CrowdCrush, []},
+    [mod: {ReactPhoenixAuth, []},
      applications: [:phoenix, :phoenix_pubsub, :phoenix_html, :cowboy, :logger, :gettext,
                     :phoenix_ecto, :postgrex, :comeonin]]
   end

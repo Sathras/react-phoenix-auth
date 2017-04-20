@@ -1,4 +1,4 @@
-defmodule CrowdCrush.Repo.Migrations.AddSlugToVideo do
+defmodule ReactPhoenixAuth.Repo.Migrations.AddSlugToVideo do
   use Ecto.Migration
 
   def change do

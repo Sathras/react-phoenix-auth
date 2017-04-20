@@ -1,5 +1,5 @@
-defmodule CrowdCrush.TestHelpers do
-  alias CrowdCrush.Repo
+defmodule ReactPhoenixAuth.TestHelpers do
+  alias ReactPhoenixAuth.Repo
 
   def insert_user(attrs \\ %{}) do
     changes = Map.merge(%{
@@ -8,8 +8,8 @@ defmodule CrowdCrush.TestHelpers do
       password: "supersecret",
     }, Map.new(attrs))
 
-    %CrowdCrush.User{}
-    |> CrowdCrush.User.registration_changeset(changes)
+    %ReactPhoenixAuth.User{}
+    |> ReactPhoenixAuth.User.registration_changeset(changes)
     |> Repo.insert!()
   end
 

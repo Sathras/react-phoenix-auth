@@ -1,4 +1,4 @@
-defmodule CrowdCrush.Repo.Migrations.AddEmail do
+defmodule ReactPhoenixAuth.Repo.Migrations.AddEmail do
   use Ecto.Migration
 
   def change do

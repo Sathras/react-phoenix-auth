@@ -1,4 +1,9 @@
-# CrowdCrush
+# ReactPhoenixAuth
+
+This can serve as a starting template to create Phoenix single-page-apps utilizing React as Frontend framework.
+User Autentification and Session/Channel Management is integrated. Once registered, users can change their email address or password through channel without page reload (example).
+
+This is in a very early Alpha and needs some cleanup. Should be working though.
 
 To start your Phoenix app:
 
@@ -29,4 +34,3 @@ Ready to run in production? Please [check our deployment guides](http://www.phoe
   * `brunch build` Build static assets, complile them and copy to priv/static
   * `brunch build --production` Builds and minifies them for production
   * `brunch watch` not needed (phoenix does that automatically)
-  *

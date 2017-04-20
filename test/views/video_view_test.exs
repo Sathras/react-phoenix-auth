@@ -1,11 +1,11 @@
-defmodule CrowdCrush.VideoViewTest do
-  use CrowdCrush.ConnCase, async: true
+defmodule ReactPhoenixAuth.VideoViewTest do
+  use ReactPhoenixAuth.ConnCase, async: true
   import Phoenix.View
 
   test "renders index.html", %{conn: conn} do
-    videos = [%CrowdCrush.Video{id: "1", title: "dogs"},
-              %CrowdCrush.Video{id: "2", title: "cats"}]
-    content = render_to_string(CrowdCrush.VideoView, "index.html",
+    videos = [%ReactPhoenixAuth.Video{id: "1", title: "dogs"},
+              %ReactPhoenixAuth.Video{id: "2", title: "cats"}]
+    content = render_to_string(ReactPhoenixAuth.VideoView, "index.html",
                                conn: conn, videos: videos)
 
     assert String.contains?(content, "Listing videos")
@@ -16,9 +16,9 @@ defmodule CrowdCrush.VideoViewTest do
 
 
   test "renders new.html", %{conn: conn} do
-    changeset = CrowdCrush.Video.changeset(%CrowdCrush.Video{})
+    changeset = ReactPhoenixAuth.Video.changeset(%ReactPhoenixAuth.Video{})
     categories = [{"cats", 123}]
-    content = render_to_string(CrowdCrush.VideoView, "new.html",
+    content = render_to_string(ReactPhoenixAuth.VideoView, "new.html",
       conn: conn, changeset: changeset, categories: categories)
 
     assert String.contains?(content, "New video")

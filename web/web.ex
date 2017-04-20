@@ -1,12 +1,12 @@
-defmodule CrowdCrush.Web do
+defmodule ReactPhoenixAuth.Web do
   @moduledoc """
   A module that keeps using definitions for controllers,
   views and so on.
 
   This can be used in your application as:
 
-      use CrowdCrush.Web, :controller
-      use CrowdCrush.Web, :view
+      use ReactPhoenixAuth.Web, :controller
+      use ReactPhoenixAuth.Web, :view
 
   The definitions below will be executed for every view,
   controller, etc, so keep them short and clean, focused
@@ -30,13 +30,13 @@ defmodule CrowdCrush.Web do
     quote do
       use Phoenix.Controller
 
-      alias CrowdCrush.Repo
+      alias ReactPhoenixAuth.Repo
       import Ecto
       import Ecto.Query
 
-      import CrowdCrush.Router.Helpers
-      import CrowdCrush.Gettext
-      import CrowdCrush.Auth, only: [authenticate_user: 2]
+      import ReactPhoenixAuth.Router.Helpers
+      import ReactPhoenixAuth.Gettext
+      import ReactPhoenixAuth.Auth, only: [authenticate_user: 2]
     end
   end
 
@@ -50,16 +50,16 @@ defmodule CrowdCrush.Web do
       # Use all HTML functionality (forms, tags, etc)
       use Phoenix.HTML
 
-      import CrowdCrush.Router.Helpers
-      import CrowdCrush.ErrorHelpers
-      import CrowdCrush.Gettext
+      import ReactPhoenixAuth.Router.Helpers
+      import ReactPhoenixAuth.ErrorHelpers
+      import ReactPhoenixAuth.Gettext
     end
   end
 
   def router do
     quote do
       use Phoenix.Router
-      import CrowdCrush.Auth, only: [authenticate_user: 2]
+      import ReactPhoenixAuth.Auth, only: [authenticate_user: 2]
     end
   end
 
@@ -67,11 +67,11 @@ defmodule CrowdCrush.Web do
     quote do
       use Phoenix.Channel
 
-      alias CrowdCrush.Repo
+      alias ReactPhoenixAuth.Repo
       import Ecto
       import Ecto.Query
-      import CrowdCrush.Gettext
-      import CrowdCrush.Auth, only: [authenticate_user: 2]
+      import ReactPhoenixAuth.Gettext
+      import ReactPhoenixAuth.Auth, only: [authenticate_user: 2]
     end
   end
 

@@ -1,6 +1,6 @@
-defmodule CrowdCrush.UserRepoTest do
-  use CrowdCrush.ModelCase
-  alias CrowdCrush.User
+defmodule ReactPhoenixAuth.UserRepoTest do
+  use ReactPhoenixAuth.ModelCase
+  alias ReactPhoenixAuth.User
 
   @valid_attrs %{name: "A User", username: "eva"}
 

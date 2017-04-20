@@ -1,10 +1,10 @@
-defmodule CrowdCrush.UserSocket do
+defmodule ReactPhoenixAuth.UserSocket do
   use Phoenix.Socket
 
   ## Channels
-  channel "main", CrowdCrush.MainChannel
-  channel "user:*", CrowdCrush.UserChannel
-  channel "videos:*", CrowdCrush.VideoChannel
+  channel "main", ReactPhoenixAuth.MainChannel
+  channel "user:*", ReactPhoenixAuth.UserChannel
+  channel "videos:*", ReactPhoenixAuth.VideoChannel
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket

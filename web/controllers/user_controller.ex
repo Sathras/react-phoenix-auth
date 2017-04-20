@@ -1,18 +1,18 @@
-defmodule CrowdCrush.UserController do
-  use CrowdCrush.Web, :controller
+defmodule ReactPhoenixAuth.UserController do
+  use ReactPhoenixAuth.Web, :controller
   plug :authenticate_user when action in [:index, :show]
 
   def index(conn, _params) do
-    users = Repo.all(CrowdCrush.User)
+    users = Repo.all(ReactPhoenixAuth.User)
     render conn, "index.html", users: users
   end
 
   def show(conn, %{"id" => id}) do
-    user = Repo.get(CrowdCrush.User, id)
+    user = Repo.get(ReactPhoenixAuth.User, id)
     render conn, "show.html", user: user
   end
 
-  alias CrowdCrush.User
+  alias ReactPhoenixAuth.User
 
   def new(conn, _params) do
     changeset = User.changeset(%User{})
@@ -24,7 +24,7 @@ defmodule CrowdCrush.UserController do
     case Repo.insert(changeset) do
       {:ok, user} ->
         conn
-        |> CrowdCrush.Auth.login(user)
+        |> ReactPhoenixAuth.Auth.login(user)
         |> put_flash(:info, "#{user.name} created!")
         |> redirect(to: user_path(conn, :index))
       {:error, changeset} ->

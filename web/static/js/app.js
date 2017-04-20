@@ -27,11 +27,6 @@ import ErrorPage from "./components/error_page"
 import Home from "./components/home"
 import NavTop from "./components/navtop"
 import Settings from "./components/settings"
-// import Video from "./video"
-
-// let video = document.getElementById("video") ;
-
-// Video.init(socket, document.getElementById("video"))
 
 class App extends React.Component {
 
@@ -145,13 +140,3 @@ ReactDOM.render(
     userToken = {window.userToken}
   />, document.getElementById("react-app")
 );
-
-// var App = {
-//   init : function(){
-//     switch (page) {
-//       case '/signIn' : console.log('Welcome'); break;
-//     }
-//   }
-// };
-
-// App.init();

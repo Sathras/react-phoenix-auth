@@ -1,3 +1,3 @@
-defmodule CrowdCrush.PageView do
-  use CrowdCrush.Web, :view
+defmodule ReactPhoenixAuth.PageView do
+  use ReactPhoenixAuth.Web, :view
 end

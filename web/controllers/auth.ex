@@ -1,8 +1,8 @@
-defmodule CrowdCrush.Auth do
+defmodule ReactPhoenixAuth.Auth do
   import Plug.Conn
   import Comeonin.Bcrypt, only: [checkpw: 2, dummy_checkpw: 0]
   import Phoenix.Controller
-  alias CrowdCrush.Router.Helpers
+  alias ReactPhoenixAuth.Router.Helpers
 
   def init(opts) do
     Keyword.fetch!(opts, :repo)
@@ -14,7 +14,7 @@ defmodule CrowdCrush.Auth do
     cond do
       user = conn.assigns[:current_user] ->
         put_current_user(conn, user)
-      user = user_id && repo.get(CrowdCrush.User, user_id) ->
+      user = user_id && repo.get(ReactPhoenixAuth.User, user_id) ->
         put_current_user(conn, user)
       true ->
         assign(conn, :current_user, nil)
@@ -42,7 +42,7 @@ defmodule CrowdCrush.Auth do
 
   def login_by_email_and_pass(conn, email, given_pass, opts) do
     repo = Keyword.fetch!(opts, :repo)
-    user = repo.get_by(CrowdCrush.User, email: email)
+    user = repo.get_by(ReactPhoenixAuth.User, email: email)
 
     cond do
       user && checkpw(given_pass, user.password_hash) ->

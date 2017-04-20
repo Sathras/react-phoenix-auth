@@ -1,4 +1,4 @@
-defmodule CrowdCrush.Repo.Migrations.CreateAnnotation do
+defmodule ReactPhoenixAuth.Repo.Migrations.CreateAnnotation do
   use Ecto.Migration
 
   def change do

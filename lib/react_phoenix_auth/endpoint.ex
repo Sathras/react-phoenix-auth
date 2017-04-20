@@ -1,14 +1,14 @@
-defmodule CrowdCrush.Endpoint do
-  use Phoenix.Endpoint, otp_app: :crowd_crush
+defmodule ReactPhoenixAuth.Endpoint do
+  use Phoenix.Endpoint, otp_app: :react_phoenix_auth
 
-  socket "/socket", CrowdCrush.UserSocket
+  socket "/socket", ReactPhoenixAuth.UserSocket
 
   # Serve at "/" the static files from "priv/static" directory.
   #
   # You should set gzip to true if you are running phoenix.digest
   # when deploying your static files in production.
   plug Plug.Static,
-    at: "/", from: :crowd_crush, gzip: false,
+    at: "/", from: :react_phoenix_auth, gzip: false,
     only: ~w(css fonts images js favicon.ico robots.txt)
 
   # Code reloading can be explicitly enabled under the
@@ -35,8 +35,8 @@ defmodule CrowdCrush.Endpoint do
   # Set :encryption_salt if you would also like to encrypt it.
   plug Plug.Session,
     store: :cookie,
-    key: "_crowd_crush_key",
+    key: "_react_phoenix_auth_key",
     signing_salt: "3qRtFB7V"
 
-  plug CrowdCrush.Router
+  plug ReactPhoenixAuth.Router
 end

@@ -1,4 +1,4 @@
-defmodule CrowdCrush.Repo.Migrations.CreateUser do
+defmodule ReactPhoenixAuth.Repo.Migrations.CreateUser do
   use Ecto.Migration
 
   def change do

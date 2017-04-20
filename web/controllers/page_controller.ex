@@ -1,6 +1,6 @@
-defmodule CrowdCrush.PageController do
-  use CrowdCrush.Web, :controller
-  alias CrowdCrush.User
+defmodule ReactPhoenixAuth.PageController do
+  use ReactPhoenixAuth.Web, :controller
+  alias ReactPhoenixAuth.User
 
   def index(conn, params) do
     changeset = User.changeset(%User{}, params)
@@ -15,7 +15,7 @@ defmodule CrowdCrush.PageController do
     case Repo.insert(changeset) do
       {:ok, user} ->
         conn
-        |> CrowdCrush.Auth.login(user)
+        |> ReactPhoenixAuth.Auth.login(user)
         |> put_flash(:info, "Thanks for signing up, #{user.username}!")
         |> redirect(to: page_path(conn, :index))
       {:error, changeset} ->
@@ -28,7 +28,7 @@ defmodule CrowdCrush.PageController do
   end
 
   def signin(conn, %{"user" => %{"email" => email, "password" => pass}}) do
-    case CrowdCrush.Auth.login_by_email_and_pass(conn, email, pass, repo: Repo) do
+    case ReactPhoenixAuth.Auth.login_by_email_and_pass(conn, email, pass, repo: Repo) do
       {:ok, conn} ->
         conn
         |> put_flash(:info, "Welcome back!")
@@ -44,7 +44,7 @@ defmodule CrowdCrush.PageController do
 
   def signout(conn, _) do
     conn
-    |> CrowdCrush.Auth.logout()
+    |> ReactPhoenixAuth.Auth.logout()
     |> redirect(to: page_path(conn, :index))
   end
 end

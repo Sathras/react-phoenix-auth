@@ -1,4 +1,4 @@
-defmodule CrowdCrush.ErrorHelpers do
+defmodule ReactPhoenixAuth.ErrorHelpers do
   @moduledoc """
   Conveniences for translating and building error messages.
   """
@@ -32,9 +32,9 @@ defmodule CrowdCrush.ErrorHelpers do
     #     dgettext "errors", "is invalid"
     #
     if count = opts[:count] do
-      Gettext.dngettext(CrowdCrush.Gettext, "errors", msg, msg, count, opts)
+      Gettext.dngettext(ReactPhoenixAuth.Gettext, "errors", msg, msg, count, opts)
     else
-      Gettext.dgettext(CrowdCrush.Gettext, "errors", msg, opts)
+      Gettext.dgettext(ReactPhoenixAuth.Gettext, "errors", msg, opts)
     end
   end
 end

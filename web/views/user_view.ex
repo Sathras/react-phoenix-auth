@@ -1,6 +1,6 @@
-defmodule CrowdCrush.UserView do
-  use CrowdCrush.Web, :view
-  alias CrowdCrush.User
+defmodule ReactPhoenixAuth.UserView do
+  use ReactPhoenixAuth.Web, :view
+  alias ReactPhoenixAuth.User
 
   def first_name(%User{name: name}) do
     name

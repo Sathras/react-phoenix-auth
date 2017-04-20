@@ -1,3 +1,3 @@
-defmodule CrowdCrush.LayoutViewTest do
-  use CrowdCrush.ConnCase, async: true
+defmodule ReactPhoenixAuth.LayoutViewTest do
+  use ReactPhoenixAuth.ConnCase, async: true
 end

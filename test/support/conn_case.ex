@@ -1,4 +1,4 @@
-defmodule CrowdCrush.ConnCase do
+defmodule ReactPhoenixAuth.ConnCase do
   @moduledoc """
   This module defines the test case to be used by
   tests that require setting up a connection.
@@ -20,24 +20,24 @@ defmodule CrowdCrush.ConnCase do
       # Import conveniences for testing with connections
       use Phoenix.ConnTest
 
-      alias CrowdCrush.Repo
+      alias ReactPhoenixAuth.Repo
       import Ecto
       import Ecto.Changeset
       import Ecto.Query
 
-      import CrowdCrush.Router.Helpers
-      import CrowdCrush.TestHelpers
+      import ReactPhoenixAuth.Router.Helpers
+      import ReactPhoenixAuth.TestHelpers
 
       # The default endpoint for testing
-      @endpoint CrowdCrush.Endpoint
+      @endpoint ReactPhoenixAuth.Endpoint
     end
   end
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(CrowdCrush.Repo)
+    :ok = Ecto.Adapters.SQL.Sandbox.checkout(ReactPhoenixAuth.Repo)
 
     unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(CrowdCrush.Repo, {:shared, self()})
+      Ecto.Adapters.SQL.Sandbox.mode(ReactPhoenixAuth.Repo, {:shared, self()})
     end
 
     {:ok, conn: Phoenix.ConnTest.build_conn()}

@@ -1,10 +1,10 @@
 # Main Channel (every visitor is permanently connected to this channel)
 
-defmodule CrowdCrush.UserChannel do
+defmodule ReactPhoenixAuth.UserChannel do
 
   import Comeonin.Bcrypt, only: [checkpw: 2, dummy_checkpw: 0]
-  use CrowdCrush.Web, :channel
-  alias CrowdCrush.User
+  use ReactPhoenixAuth.Web, :channel
+  alias ReactPhoenixAuth.User
 
   def join("user:" <> user_id, _params, socket) do
 
@@ -19,7 +19,7 @@ defmodule CrowdCrush.UserChannel do
   def handle_in("changeUserSettings", params, socket) do
 
     # see if old password matches the one in database
-    user = Repo.get_by(CrowdCrush.User, id: socket.assigns.user_id)
+    user = Repo.get_by(ReactPhoenixAuth.User, id: socket.assigns.user_id)
 
     cond do
       # old password matched --> continue

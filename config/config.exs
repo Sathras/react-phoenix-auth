@@ -6,15 +6,15 @@
 use Mix.Config
 
 # General application configuration
-config :crowd_crush,
-  ecto_repos: [CrowdCrush.Repo]
+config :react_phoenix_auth,
+  ecto_repos: [ReactPhoenixAuth.Repo]
 
 # Configures the endpoint
-config :crowd_crush, CrowdCrush.Endpoint,
+config :react_phoenix_auth, ReactPhoenixAuth.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "E34na4J3MaLbTF1S/sClGDN4gq6XurO+8xVar6AI0gmZMKovZkDFk1yzyQAKchhm",
-  render_errors: [view: CrowdCrush.ErrorView, accepts: ~w(html json)],
-  pubsub: [name: CrowdCrush.PubSub,
+  render_errors: [view: ReactPhoenixAuth.ErrorView, accepts: ~w(html json)],
+  pubsub: [name: ReactPhoenixAuth.PubSub,
            adapter: Phoenix.PubSub.PG2]
 
 # Configures Elixir's Logger

@@ -1,4 +1,4 @@
-defmodule CrowdCrush.Permalink do
+defmodule ReactPhoenixAuth.Permalink do
   @behaviour Ecto.Type
 
   def type, do: :id

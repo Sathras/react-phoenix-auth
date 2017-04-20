@@ -1,3 +1,3 @@
-defmodule CrowdCrush.PageViewTest do
-  use CrowdCrush.ConnCase, async: true
+defmodule ReactPhoenixAuth.PageViewTest do
+  use ReactPhoenixAuth.ConnCase, async: true
 end

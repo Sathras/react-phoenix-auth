@@ -1,4 +1,4 @@
-defmodule CrowdCrush.ModelCase do
+defmodule ReactPhoenixAuth.ModelCase do
   @moduledoc """
   This module defines the test case to be used by
   model tests.
@@ -16,21 +16,21 @@ defmodule CrowdCrush.ModelCase do
 
   using do
     quote do
-      alias CrowdCrush.Repo
+      alias ReactPhoenixAuth.Repo
 
       import Ecto
       import Ecto.Changeset
       import Ecto.Query
-      import CrowdCrush.TestHelpers
-      import CrowdCrush.ModelCase
+      import ReactPhoenixAuth.TestHelpers
+      import ReactPhoenixAuth.ModelCase
     end
   end
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(CrowdCrush.Repo)
+    :ok = Ecto.Adapters.SQL.Sandbox.checkout(ReactPhoenixAuth.Repo)
 
     unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(CrowdCrush.Repo, {:shared, self()})
+      Ecto.Adapters.SQL.Sandbox.mode(ReactPhoenixAuth.Repo, {:shared, self()})
     end
 
     :ok
@@ -60,7 +60,7 @@ defmodule CrowdCrush.ModelCase do
   """
   def errors_on(struct, data) do
     struct.__struct__.changeset(struct, data)
-    |> Ecto.Changeset.traverse_errors(&CrowdCrush.ErrorHelpers.translate_error/1)
+    |> Ecto.Changeset.traverse_errors(&ReactPhoenixAuth.ErrorHelpers.translate_error/1)
     |> Enum.flat_map(fn {key, errors} -> for msg <- errors, do: {key, msg} end)
   end
 end

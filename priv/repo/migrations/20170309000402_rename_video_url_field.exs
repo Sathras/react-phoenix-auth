@@ -1,4 +1,4 @@
-defmodule CrowdCrush.Repo.Migrations.RenameVideoUrlField do
+defmodule ReactPhoenixAuth.Repo.Migrations.RenameVideoUrlField do
   use Ecto.Migration
 
   def change do

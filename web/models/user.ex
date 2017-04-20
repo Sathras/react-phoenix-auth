@@ -1,5 +1,5 @@
-defmodule CrowdCrush.User do
-  use CrowdCrush.Web, :model
+defmodule ReactPhoenixAuth.User do
+  use ReactPhoenixAuth.Web, :model
 
   schema "users" do
     field :email, :string
@@ -7,8 +7,8 @@ defmodule CrowdCrush.User do
     field :username, :string
     field :password, :string, virtual: true
     field :password_hash, :string
-    has_many :videos, CrowdCrush.Video
-    has_many :annotations, CrowdCrush.Annotation
+    has_many :videos, ReactPhoenixAuth.Video
+    has_many :annotations, ReactPhoenixAuth.Annotation
     timestamps()
   end
 

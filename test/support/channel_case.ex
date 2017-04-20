@@ -1,4 +1,4 @@
-defmodule CrowdCrush.ChannelCase do
+defmodule ReactPhoenixAuth.ChannelCase do
   @moduledoc """
   This module defines the test case to be used by
   channel tests.
@@ -20,22 +20,22 @@ defmodule CrowdCrush.ChannelCase do
       # Import conveniences for testing with channels
       use Phoenix.ChannelTest
 
-      alias CrowdCrush.Repo
+      alias ReactPhoenixAuth.Repo
       import Ecto
       import Ecto.Changeset
       import Ecto.Query
 
 
       # The default endpoint for testing
-      @endpoint CrowdCrush.Endpoint
+      @endpoint ReactPhoenixAuth.Endpoint
     end
   end
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(CrowdCrush.Repo)
+    :ok = Ecto.Adapters.SQL.Sandbox.checkout(ReactPhoenixAuth.Repo)
 
     unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(CrowdCrush.Repo, {:shared, self()})
+      Ecto.Adapters.SQL.Sandbox.mode(ReactPhoenixAuth.Repo, {:shared, self()})
     end
 
     :ok

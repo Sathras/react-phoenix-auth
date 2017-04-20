@@ -1,4 +1,4 @@
-defmodule CrowdCrush.Repo.Migrations.AddCategoryIdToVideo do
+defmodule ReactPhoenixAuth.Repo.Migrations.AddCategoryIdToVideo do
   use Ecto.Migration
 
   def change do

@@ -1,4 +1,4 @@
 ExUnit.start
 
-Ecto.Adapters.SQL.Sandbox.mode(CrowdCrush.Repo, :manual)
+Ecto.Adapters.SQL.Sandbox.mode(ReactPhoenixAuth.Repo, :manual)
 

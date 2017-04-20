@@ -1,5 +1,5 @@
-defmodule CrowdCrush.ErrorView do
-  use CrowdCrush.Web, :view
+defmodule ReactPhoenixAuth.ErrorView do
+  use ReactPhoenixAuth.Web, :view
 
   def render("404.html", _assigns) do
     "Page not found"

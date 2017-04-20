@@ -1,8 +1,8 @@
 # Main Channel (every visitor is permanently connected to this channel)
 
-defmodule CrowdCrush.MainChannel do
+defmodule ReactPhoenixAuth.MainChannel do
 
-  use CrowdCrush.Web, :channel
+  use ReactPhoenixAuth.Web, :channel
 
   def join("main", _params, socket) do
 
@@ -11,7 +11,7 @@ defmodule CrowdCrush.MainChannel do
     # case socket.assigns.user_id do
     #   nil -> {:ok, %{user: nil}, socket}
     #     _ ->
-    #       user = Repo.get!(CrowdCrush.User, socket.assigns.user_id)
+    #       user = Repo.get!(ReactPhoenixAuth.User, socket.assigns.user_id)
     #       {:ok, %{user: %{
     #         :username => user.username,
     #         :email => user.email,

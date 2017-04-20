@@ -1,11 +1,11 @@
-defmodule CrowdCrush.AuthTest do
-  use CrowdCrush.ConnCase
-  alias CrowdCrush.Auth
+defmodule ReactPhoenixAuth.AuthTest do
+  use ReactPhoenixAuth.ConnCase
+  alias ReactPhoenixAuth.Auth
 
   setup %{conn: conn} do
     conn =
       conn
-        |> bypass_through(CrowdCrush.Router, :browser)
+        |> bypass_through(ReactPhoenixAuth.Router, :browser)
         |> get("/")
       {:ok, %{conn: conn}
     }
@@ -23,7 +23,7 @@ defmodule CrowdCrush.AuthTest do
 
     conn =
       conn
-      |> assign(:current_user, %CrowdCrush.User{})
+      |> assign(:current_user, %ReactPhoenixAuth.User{})
       |> Auth.authenticate_user([])
 
     refute conn.halted
@@ -32,7 +32,7 @@ defmodule CrowdCrush.AuthTest do
   test "login puts the user in the session", %{conn: conn} do
     login_conn =
       conn
-      |> Auth.login(%CrowdCrush.User{id: 123})
+      |> Auth.login(%ReactPhoenixAuth.User{id: 123})
       |> send_resp(:ok, "")
 
     next_conn = get(login_conn, "/")

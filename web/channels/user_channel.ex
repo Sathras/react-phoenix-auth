@@ -10,9 +10,11 @@ defmodule ReactPhoenixAuth.UserChannel do
 
     # get user data (if socket has a user authentificated)
     # and deliver it back to frontend
-    case socket.assigns.user_id do
-      user_id -> {:ok, socket}
-      _ -> {:error, %{reason: "unauthorized"}}
+    user = socket.assigns.user_id
+    if user == user_id do
+      {:ok, socket}
+    else
+      {:error, %{reason: "unauthorized"}}
     end
   end
 
@@ -31,9 +33,9 @@ defmodule ReactPhoenixAuth.UserChannel do
 
         # change email / password and respond to client
         case Repo.update(changeset) do
-          {:ok, user} ->
+          {:ok, _user} ->
             {:reply, :ok, socket}
-          {:error, changeset} ->
+          {:error, _changeset} ->
             {:error, :invalid_data, socket}
         end
 

@@ -1,4 +1,5 @@
 import React from "react"
+import InputElement from "./formInput"
 
 class NavTop extends React.Component {
 
@@ -7,7 +8,6 @@ class NavTop extends React.Component {
 
     this.changeMode   = this.changeMode.bind(this);
     this.changeField  = this.changeField.bind(this);
-    this.printInput   = this.printInput.bind(this);
     this.validateForm = this.validateForm.bind(this);
 
     this.error = {
@@ -35,8 +35,9 @@ class NavTop extends React.Component {
     fields.name.valid = (fields.name.error == "") ? true : false
 
     this.state = Object.assign(fields, {
+      modal     : null,
       password2 : { valid: false, value: "", error: "" },
-      modal     : (this.props.error) ? this.props.error : false,
+      // modal     : (this.props.error) ? this.props.error : false,
       submitted : (this.props.error) ? true : false
     })
 
@@ -44,7 +45,7 @@ class NavTop extends React.Component {
 
   componentDidUpdate(){
     if(!this.state.submitted && this.state.modal && this.state.email.value === '')
-    document.getElementById("auth-email").focus();
+    document.getElementById("email").focus();
   }
 
   changeMode(e, mode){
@@ -99,33 +100,6 @@ class NavTop extends React.Component {
     this.props.switchPage()
   }
 
-  // Print Input Field
-  printInput (field, classDiv, label, placeholder, type="text") {
-
-    var error = null
-    if(this.state.submitted && !this.state[field].valid){
-      if(this.state[field].error !== "") error = this.state[field].error
-      else error = this.error[field]
-    }
-
-    return(
-      <div className={classDiv}>
-        <label className="control-label" htmlFor={field}>{label}</label>
-        <input
-          id={field}
-          name={"user["+field+"]"}
-          type={type}
-          className="form-control"
-          placeholder={placeholder}
-          value={this.state[field].value}
-          onChange = {this.changeField}
-        />
-        <span className="help-block">{error}
-        </span>
-      </div>
-    );
-  }
-
   validateForm (e){
 
     e.preventDefault();
@@ -145,29 +119,11 @@ class NavTop extends React.Component {
 
     var authLink = (this.props.user)
       ? <li><a href="/signout">Logout</a></li>
-      : <li><a href="/signin" onClick={(e) => this.changeMode(e, 'signin')}>Login</a></li>
+      : <li><a href="/signin" onClick={(e) => this.changeMode(e, false)}>Login</a></li>
 
     var regLink = (!this.props.user)
-      ? <li><a href="/signup" onClick={(e) => this.changeMode(e, 'signup')}>Register</a></li>
+      ? <li><a href="/signup" onClick={(e) => this.changeMode(e, true)}>Register</a></li>
       : null
-
-    var reg = (this.state.modal === 'signup') ? true : false;
-
-    var classDiv = {
-      email     : 'form-group',
-      password  : 'form-group',
-      username  : (reg) ? 'form-group' : 'hidden',
-      name      : (reg) ? 'form-group' : 'hidden',
-      password2 : (reg) ? 'form-group' : 'hidden'
-    }
-    // validation classes for form fields
-    if(this.state.submitted){
-      classDiv.username  += (this.state.username.valid)  ? ' has-success' : ' has-error'
-      classDiv.name      += (this.state.name.valid)      ? ' has-success' : ' has-error'
-      classDiv.email     += (this.state.email.valid)     ? ' has-success' : ' has-error'
-      classDiv.password  += (this.state.password.valid)  ? ' has-success' : ' has-error'
-      classDiv.password2 += (this.state.password2.valid) ? ' has-success' : ' has-error'
-    }
 
     var error = null
     if(this.props.error === 'signin'){
@@ -182,15 +138,59 @@ class NavTop extends React.Component {
         </div>
     }
 
+    // Input fields
+    var InputUsername, InputName, InputPassword2
+    InputUsername = InputName = InputPassword2 = null
+
+    if(this.state.modal){
+      InputUsername =
+        <InputElement
+          name = "username"
+          form = "user"
+          label = "Username*"
+          placeholder = "Username"
+          value = {this.state.username.value}
+          valid = {this.state.username.valid}
+          error = {this.error.username}
+          onChange = {(e) => this.changeField(e)}
+          submitted = {this.state.submitted}
+        />
+      InputName =
+        <InputElement
+          name = "name"
+          form = "user"
+          label = "Name"
+          placeholder = "Name"
+          value = {this.state.name.value}
+          valid = {this.state.name.valid}
+          error = {this.error.name}
+          onChange = {(e) => this.changeField(e)}
+          submitted = {this.state.submitted}
+        />
+      InputPassword2 =
+        <InputElement
+          name = "password2"
+          form = "user"
+          label = "Confirm Password*"
+          type = "password"
+          placeholder = "Confirm Password"
+          value = {this.state.password2.value}
+          valid = {this.state.password2.valid}
+          error = {this.error.password2}
+          onChange = {(e) => this.changeField(e)}
+          submitted = {this.state.submitted}
+        />
+    }
+
     // Footer Line
-    var footer = (reg)
+    var footer = (this.state.modal)
       ? <p>
           Already have an account?
-          <a onClick={(e) => this.changeMode(e, 'signin')}> Sign in</a>
+          <a onClick={(e) => this.changeMode(e, false)}> Sign in</a>
         </p>
       : <p>
           No account yet?
-          <a onClick={(e) => this.changeMode(e, 'signup')}> Register here</a>
+          <a onClick={(e) => this.changeMode(e, true)}> Register here</a>
         </p>
 
     return (
@@ -211,46 +211,67 @@ class NavTop extends React.Component {
           </ul>
         </div>
         <div id='modal-auth' className="modal fade in" role="dialog" style={{
-          display: (this.state.modal) ? 'block' : 'none'
+          display: (this.state.modal === null) ? 'none' : 'block'
         }}>
 
         <form
           id="authForm"
           acceptCharset="UTF-8"
           method="post"
-          action={(reg) ? '/signup' : '/signin'}
+          action={(this.state.modal) ? '/signup' : '/signin'}
           onSubmit={(e) => this.validateForm(e)}
         >
 
           <input name="_csrf_token" type="hidden" value={this.props.csrfToken} />
           <input name="_utf8" type="hidden" value="✓" />
 
-          <div className={'modal-dialog ' + ((reg) ? 'modal-lg' : 'modal-sm')} role="document">
+          <div className={'modal-dialog ' + ((this.state.modal) ? 'modal-lg' : 'modal-sm')} role="document">
             <div className="modal-content">
               <div className="modal-header">
                 <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
-                <h3 className="modal-title">{(reg) ? 'Register' : 'Sign in'}</h3>
+                <h3 className="modal-title">{(this.state.modal) ? 'Register' : 'Sign in'}</h3>
               </div>
               <div className="modal-body">
                 {error}
                 <div className='row'>
-                  <div className={(reg) ? 'col-sm-6' : 'col-sm-12'}>
-                    {this.printInput('username', classDiv.username, 'Username*', 'Username')}
-                    {this.printInput('email', classDiv.email, 'Email*', 'Email')}
-                    {this.printInput('name', classDiv.name, 'Name', 'Name')}
+                  <div className={(this.state.modal) ? 'col-sm-6' : 'col-sm-12'}>
+                    {InputUsername}
+                    <InputElement
+                      name = "email"
+                      form = "user"
+                      label = "Email*"
+                      placeholder = "Email"
+                      value = {this.state.email.value}
+                      valid = {this.state.email.valid}
+                      error = {this.error.email}
+                      onChange = {(e) => this.changeField(e)}
+                      submitted = {this.state.submitted}
+                    />
+                    {InputName}
                   </div>
-                  <div className={(reg) ? 'col-sm-6' : 'col-sm-12'}>
-                    {this.printInput('password', classDiv.password, 'Password*', 'Password', 'password')}
-                    {this.printInput('password2', classDiv.password2, 'Repeat Password*', 'Confirm Password*', 'password')}
+                  <div className={(this.state.modal) ? 'col-sm-6' : 'col-sm-12'}>
+                    <InputElement
+                      name = "password"
+                      form = "user"
+                      label = "Password*"
+                      placeholder = "Password"
+                      type = "password"
+                      value = {this.state.password.value}
+                      valid = {this.state.password.valid}
+                      error = {this.error.password}
+                      onChange = {(e) => this.changeField(e)}
+                      submitted = {this.state.submitted}
+                    />
+                    {InputPassword2}
                   </div>
                 </div>
                 {footer}
               </div>
               <div className="modal-footer">
-                <button type="button" className="btn btn-default" onClick={(e) => this.changeMode(e, false)}>Cancel</button>
-                <button type="submit" className="btn btn-primary">{(reg) ? 'Sign Up' : 'Sign In'}</button>
+                <button type="button" className="btn btn-default" onClick={(e) => this.changeMode(e, null)}>Cancel</button>
+                <button type="submit" className="btn btn-primary">{(this.state.modal) ? 'Sign Up' : 'Sign In'}</button>
               </div>
             </div>
           </div>
